@@ -180,25 +180,45 @@ def user_stats(df, city):
     if city == 'washington':
         print("washington data doesn't have birth column")
     else:
-        earliest = int(df['Birth Year'].min())
-        recent = int(df['Birth Year'].max())
-        common_year = int(df['Birth Year'].mode()[0])
-        print("the earliest , recent and common year are : {} , {} and {}".format(earliest, recent, common_year))
+        try:
+
+            earliest = int(df['Birth Year'].min())
+            recent = int(df['Birth Year'].max())
+            common_year = int(df['Birth Year'].mode())
+            print("the earliest , recent and common year are : {} , {} and {}".format(earliest, recent, common_year))
+        except:
+            print("There is no birth year")
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-' * 40)
+
+
+def display(df):
+    i = 0
+    raw = input(
+        "\nWould you like to to show raw data\n? (yes,no)")  # TO DO: convert the user input to lower case using lower() function
+
+    while True:
+        if raw.lower() == 'no':
+            break
+        elif raw.lower() == 'yes':
+            print(df[i:i + 5])  # TO DO: appropriately subset/slice your dataframe to display next five rows
+            raw = input(
+                "Do you wish to view more raw data?")  # TO DO: convert the user input to lower case using lower() function
+            i += 5
+        else:
+            raw = input("\nYour input is invalid. Please enter only 'yes' or 'no'\n")
 
 
 def main():
     while True:
         city, month, day = get_filters()
         df = load_data(city, month, day)
-
+        display(df)
         time_stats(df)
         station_stats(df)
         trip_duration_stats(df)
         user_stats(df, city)
-
         restart = input('\nWould you like to restart? Enter yes or no.\n')
         if restart.lower() != 'yes':
             break
